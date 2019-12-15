@@ -10,6 +10,5 @@ public interface AntiBanMethod {
     void SleepRandom();
     void RunEnergyRandom();
     void SayRandomPlayerName();
-    void DropOneBerry();
     void ZoomInOut();
 }

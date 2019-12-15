@@ -26,13 +26,16 @@ public class StartScreen extends JDialog {
     public boolean use_say_random_words = false;
     public boolean use_turn_screen_random = false;
     public boolean use_sleep_random = false;
-    Checkbox cb = new Checkbox("Enable", false);
+    public boolean use_run_energy_random = false;
+    public boolean use_greet_random_player = false;
     Object[] columnNames = {"Anti-ban method", "Enable"};
     Object[][] data = {
             {"Method: Examine random objects", true},
             {"Method: Say random words", true},
             {"Method: Turn screen random", true},
-            {"Method: Sleep random", true}
+            {"Method: Sleep random", true},
+            {"Method: Run energy random", true},
+            {"Method: Greet random player", true}
     };
     DefaultTableModel model = new DefaultTableModel(data, columnNames) {
         @Override
@@ -59,6 +62,7 @@ public class StartScreen extends JDialog {
 
     public StartScreen() {
         initComponents();
+        table1.setModel(model);
         setModal(true);
         table1.getModel().addTableModelListener(new TableModelListener() {
             @Override
@@ -70,15 +74,23 @@ public class StartScreen extends JDialog {
                     }
 
                     if (row == 1) {
-                        use_say_random_words = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_say_random_words = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
 
                     if (row == 2) {
-                        use_turn_screen_random = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_turn_screen_random = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
 
                     if (row == 3) {
-                        use_sleep_random = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_sleep_random = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
+                    }
+
+                    if (row == 4) {
+                        use_run_energy_random = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
+                    }
+
+                    if (row == 5) {
+                        use_greet_random_player = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
                 }
             }
@@ -92,16 +104,19 @@ public class StartScreen extends JDialog {
         only_cadava_berries = (radioButton3.isSelected()) ? true : false;
         only_redberries = (radioButton4.isSelected()) ? true : false;
         all_berries = (radioButton5.isSelected()) ? true : false;
-        use_examine_random_objects = (boolean)table1.getModel().getValueAt(0, 1);
-        use_say_random_words = (boolean)table1.getModel().getValueAt(1, 1);
-        use_turn_screen_random = (boolean)table1.getModel().getValueAt(2, 1);
-        use_sleep_random = (boolean)table1.getModel().getValueAt(3, 1);
+        use_examine_random_objects = (boolean) table1.getModel().getValueAt(0, 1);
+        use_say_random_words = (boolean) table1.getModel().getValueAt(1, 1);
+        use_turn_screen_random = (boolean) table1.getModel().getValueAt(2, 1);
+        use_sleep_random = (boolean) table1.getModel().getValueAt(3, 1);
+        use_run_energy_random = (boolean) table1.getModel().getValueAt(4, 1);
+        use_greet_random_player = (boolean) table1.getModel().getValueAt(5, 1);
 
         System.out.println(use_examine_random_objects);
         System.out.println(use_say_random_words);
         System.out.println(use_turn_screen_random);
         System.out.println(use_sleep_random);
-        JOptionPane.showMessageDialog(this, "Thanks for using Picker by henkslot :)", "Picker", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println(use_run_energy_random);
+        System.out.println(use_greet_random_player);
 
         // closing the JFrame
         dispose();
@@ -133,6 +148,14 @@ public class StartScreen extends JDialog {
 
     public boolean isUse_sleep_random() {
         return use_sleep_random;
+    }
+
+    public boolean isUse_run_energy_random() {
+        return use_run_energy_random;
+    }
+
+    public boolean isUse_greet_random_player() {
+        return use_greet_random_player;
     }
 
     private void createUIComponents() {

@@ -153,10 +153,6 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         SleepRandom();
     }
 
-    public void DropOneBerry() {
-
-    }
-
     public void ZoomInOut() {
 
     }

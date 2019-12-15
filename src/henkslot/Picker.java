@@ -273,6 +273,24 @@ public class Picker extends PollingScript<CustomContext> implements PaintListene
                 }
             });
         }
+
+        if (sc.isUse_run_energy_random()) {
+            anti_ban_methods.add(new AntiBan(ctx, this) {
+                @Override
+                public void Execute() {
+                    super.RunEnergyRandom();
+                }
+            });
+        }
+
+        if (sc.isUse_greet_random_player()) {
+            anti_ban_methods.add(new AntiBan(ctx, this) {
+                @Override
+                public void Execute() {
+                    super.SayRandomPlayerName();
+                }
+            });
+        }
     }
 
     public void BerriesCollected() {
