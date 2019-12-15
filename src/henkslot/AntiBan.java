@@ -5,10 +5,8 @@ package henkslot;
 
 import org.powerbot.bot.rt4.client.Client;
 import org.powerbot.script.*;
-import org.powerbot.script.rt4.Chat;
+import org.powerbot.script.rt4.*;
 import org.powerbot.script.rt4.ClientContext;
-import org.powerbot.script.rt4.GameObject;
-import org.powerbot.script.rt4.TileMatrix;
 
 import java.awt.*;
 import java.time.LocalTime;
@@ -126,11 +124,33 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
     }
 
     public void RunEnergyRandom() {
-
+        // if the bank interface is open, don't try to click the run energy
+        if (!bank.opened()) {
+            // can't run if there's no energy
+            if (movement.energyLevel() > 0) {
+                movement.running(true);
+            } else {
+                movement.running(false);
+            }
+        }
     }
 
     public void SayRandomPlayerName() {
+        // update the query cache with new data
+        players.select();
+        // remove items not within 20 unit distance
+        players.within(20);
+        // store the nearest player into the variable p
+        final Player p = players.nearest().poll();
+        // update with more starting sentences
+        String[] start_sentences = {"Hey ", "Sup ", "Yo ", "Waddup ", "Wassup ", "Nice ", "Cool ", "Hello ", "Hi ", "G'day ", "Howdy ", "Hey there "};
+        // random index from the array
+        int random_int = Random.nextInt(0, start_sentences.length);
+        // and the associated value
+        String random_start = start_sentences[random_int];
 
+        input.sendln(random_start + p.name());
+        SleepRandom();
     }
 
     public void DropOneBerry() {
