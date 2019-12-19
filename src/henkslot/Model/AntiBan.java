@@ -1,14 +1,11 @@
-package henkslot;
+package henkslot.Model;
 
 //Well well well, what is human behaviour? This class will handle antiban implementations...
 //Humans are curious, bots are not. So...
 
-import org.powerbot.bot.rt4.client.Client;
 import org.powerbot.script.*;
 import org.powerbot.script.rt4.*;
 import org.powerbot.script.rt4.ClientContext;
-
-import java.awt.*;
 import java.time.LocalTime;
 
 public class AntiBan extends ClientContext implements AntiBanMethod {
@@ -41,7 +38,7 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.toString());
         }
-        picker.setLatest_anti_ban("Turned screen random");
+        Util.latest_anti_ban = "Turned screen random";
     }
 
     public void ExamineRandomObjects() {
@@ -75,7 +72,7 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
                 }
             }
         }
-        picker.setLatest_anti_ban("Examined random objects");
+        Util.latest_anti_ban = "Examined random objects";
     }
 
     public void SayRandomWords() {
@@ -91,7 +88,7 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         }
         input.sendln(randomStrings);
         Condition.sleep(Random.nextInt(1500, 2000));
-        picker.setLatest_anti_ban("Say random words");
+        Util.latest_anti_ban = "Say random words";
     }
 
     public void SleepRandom() {
@@ -119,7 +116,7 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         int rand_second = Random.nextInt(Random.nextInt(1100, 1500), Random.nextInt(1500, 1900));
 
         int final_sleep_time = Random.nextInt(rand_first, rand_second);
-        picker.setLatest_anti_ban("Random sleep");
+        Util.latest_anti_ban = "Random sleep";
         Condition.sleep(final_sleep_time);
     }
 
@@ -133,15 +130,18 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
                 movement.running(false);
             }
         }
+        Util.latest_anti_ban = "Random run energy";
     }
 
     public void SayRandomPlayerName() {
         // update the query cache with new data
         players.select();
-        // remove items not within 20 unit distance
-        players.within(20);
-        // store the nearest player into the variable p
-        final Player p = players.nearest().poll();
+        // store the nearest player into the variable p (excluding urself)
+        final Player p = players.select().within(25).select(new Filter<Player>() {
+            public boolean accept(Player player) {
+                return !player.equals(players.local());
+            }
+        }).poll();
         // update with more starting sentences
         String[] start_sentences = {"Hey ", "Sup ", "Yo ", "Waddup ", "Wassup ", "Nice ", "Cool ", "Hello ", "Hi ", "G'day ", "Howdy ", "Hey there "};
         // random index from the array
@@ -149,11 +149,20 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         // and the associated value
         String random_start = start_sentences[random_int];
 
-        input.sendln(random_start + p.name());
-        SleepRandom();
+        // if the query found a player
+        if (p != null) {
+            input.sendln(random_start + p.name());
+            SleepRandom();
+        }
+        Util.latest_anti_ban = "Say random player name";
     }
 
     public void ZoomInOut() {
-
+        System.out.println("pitch" + camera.pitch());
+        camera.pitch(150);
+        Condition.sleep(2000);
+        camera.pitch(300);
+        System.out.println("pitch" + camera.pitch());
+        Util.latest_anti_ban = "zoom in out";
     }
 }

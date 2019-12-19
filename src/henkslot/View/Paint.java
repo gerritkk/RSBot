@@ -1,13 +1,13 @@
-package henkslot;
+package henkslot.View;
 
+import henkslot.Model.AntiBan;
+import henkslot.Model.Util;
 import org.powerbot.script.PaintListener;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.ClientContext;
-import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.TileMatrix;
 
 import java.awt.*;
-import java.time.Duration;
 
 public class Paint implements PaintListener {
 
@@ -27,9 +27,13 @@ public class Paint implements PaintListener {
         g.setColor(Color.red);
         g.drawPolygon(matrix123.bounds());
 
-//        g.setFont(new Font("Courier New", Font.BOLD, 12));
-//        g.drawString("Berries collected: ", 0, 10);
-//        g.drawString("Time ran: " + (System.currentTimeMillis() / 1000) + " seconds", 0, 30);
+        g.setFont(new Font("Courier New", Font.BOLD, 18));
+        g.drawString("Berries collected: " + Util.berries_collected, 0, 30);
+        g.drawString("Runtime: " + (((System.currentTimeMillis() - Util.start_time)) / 1000) + " seconds", 0, 50);
+        g.drawString("Bot state: " + Util.current_state, 0, 70);
+        g.drawString("Anti-ban state: \n" + Util.latest_anti_ban, 0, 90);
+        g.drawString("inventory_space_temp: " + Util.inventory_space_temp, 0, 110);
+        g.drawString("inventory_space: \n" + Util.inventory_space, 0, 130);
 
         //draws the area
         if (AntiBan.examine_area != null) {

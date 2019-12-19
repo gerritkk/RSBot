@@ -1,4 +1,4 @@
-package henkslot;
+package henkslot.Model;
 
 import java.time.LocalTime;
 

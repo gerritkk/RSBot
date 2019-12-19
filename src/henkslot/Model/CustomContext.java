@@ -1,5 +1,6 @@
-package henkslot;
+package henkslot.Model;
 
+import henkslot.Model.AntiBan;
 import org.powerbot.script.rt4.ClientContext;
 
 public class CustomContext extends ClientContext {
