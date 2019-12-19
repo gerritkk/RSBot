@@ -2,14 +2,16 @@
  * Created by JFormDesigner on Thu Dec 12 18:13:12 CET 2019
  */
 
-package henkslot;
+package henkslot.View;
 
 import javafx.scene.control.SelectionModel;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
@@ -26,24 +28,26 @@ public class StartScreen extends JDialog {
     public boolean use_say_random_words = false;
     public boolean use_turn_screen_random = false;
     public boolean use_sleep_random = false;
-    Checkbox cb = new Checkbox("Enable", false);
+    public boolean use_run_energy_random = false;
+    public boolean use_greet_random_player = false;
+    public boolean use_zoom_in_out = false;
     Object[] columnNames = {"Anti-ban method", "Enable"};
     Object[][] data = {
             {"Method: Examine random objects", true},
             {"Method: Say random words", true},
             {"Method: Turn screen random", true},
-            {"Method: Sleep random", true}
+            {"Method: Sleep random", true},
+            {"Method: Run energy random", true},
+            {"Method: Greet random player", true},
+            {"Method: Zoom in or out random", true}
     };
     DefaultTableModel model = new DefaultTableModel(data, columnNames) {
         @Override
-        public Class getColumnClass(int column)
-        {
-            for (int row = 0; row < getRowCount(); row++)
-            {
+        public Class getColumnClass(int column) {
+            for (int row = 0; row < getRowCount(); row++) {
                 Object o = getValueAt(row, column);
 
-                if (o != null)
-                {
+                if (o != null) {
                     return o.getClass();
                 }
             }
@@ -59,6 +63,7 @@ public class StartScreen extends JDialog {
 
     public StartScreen() {
         initComponents();
+        table1.setModel(model);
         setModal(true);
         table1.getModel().addTableModelListener(new TableModelListener() {
             @Override
@@ -66,19 +71,31 @@ public class StartScreen extends JDialog {
                 if (e.getType() == TableModelEvent.UPDATE) {
                     int row = e.getFirstRow();
                     if (row == 0) {
-                        use_examine_random_objects = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_examine_random_objects = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
 
                     if (row == 1) {
-                        use_say_random_words = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_say_random_words = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
 
                     if (row == 2) {
-                        use_turn_screen_random = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_turn_screen_random = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
 
                     if (row == 3) {
-                        use_sleep_random = (boolean)table1.getModel().getValueAt(e.getFirstRow(), 1);
+                        use_sleep_random = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
+                    }
+
+                    if (row == 4) {
+                        use_run_energy_random = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
+                    }
+
+                    if (row == 5) {
+                        use_greet_random_player = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
+                    }
+
+                    if (row == 6) {
+                        use_zoom_in_out = (boolean) table1.getModel().getValueAt(e.getFirstRow(), 1);
                     }
                 }
             }
@@ -92,16 +109,21 @@ public class StartScreen extends JDialog {
         only_cadava_berries = (radioButton3.isSelected()) ? true : false;
         only_redberries = (radioButton4.isSelected()) ? true : false;
         all_berries = (radioButton5.isSelected()) ? true : false;
-        use_examine_random_objects = (boolean)table1.getModel().getValueAt(0, 1);
-        use_say_random_words = (boolean)table1.getModel().getValueAt(1, 1);
-        use_turn_screen_random = (boolean)table1.getModel().getValueAt(2, 1);
-        use_sleep_random = (boolean)table1.getModel().getValueAt(3, 1);
+        use_examine_random_objects = (boolean) table1.getModel().getValueAt(0, 1);
+        use_say_random_words = (boolean) table1.getModel().getValueAt(1, 1);
+        use_turn_screen_random = (boolean) table1.getModel().getValueAt(2, 1);
+        use_sleep_random = (boolean) table1.getModel().getValueAt(3, 1);
+        use_run_energy_random = (boolean) table1.getModel().getValueAt(4, 1);
+        use_greet_random_player = (boolean) table1.getModel().getValueAt(5, 1);
+        use_zoom_in_out = (boolean) table1.getModel().getValueAt(6, 1);
 
         System.out.println(use_examine_random_objects);
         System.out.println(use_say_random_words);
         System.out.println(use_turn_screen_random);
         System.out.println(use_sleep_random);
-        JOptionPane.showMessageDialog(this, "Thanks for using Picker by henkslot :)", "Picker", JOptionPane.INFORMATION_MESSAGE);
+        System.out.println(use_run_energy_random);
+        System.out.println(use_greet_random_player);
+        System.out.println(use_zoom_in_out);
 
         // closing the JFrame
         dispose();
@@ -135,8 +157,61 @@ public class StartScreen extends JDialog {
         return use_sleep_random;
     }
 
+    public boolean isUse_run_energy_random() {
+        return use_run_energy_random;
+    }
+
+    public boolean isUse_zoom_in_out() {
+        return use_zoom_in_out;
+    }
+
+    public boolean isUse_greet_random_player() {
+        return use_greet_random_player;
+    }
+
     private void createUIComponents() {
         // TODO: add custom component creation code here
+    }
+
+    private JSlider slider1;
+    private JLabel label1;
+
+    private void slider1StateChanged(ChangeEvent e) {
+        JSlider source;
+        source = (JSlider) e.getSource();
+        label1.setText("Execute anti-ban method every " + source.getValue() + " seconds");
+    }
+
+    public int GetSliderValue() {
+        return slider1.getValue();
+    }
+
+    private void radioButton3ActionPerformed(ActionEvent e) {
+        radioButton4.setSelected(false);
+        radioButton5.setSelected(false);
+    }
+
+    private void radioButton4ActionPerformed(ActionEvent e) {
+        radioButton3.setSelected(false);
+        radioButton5.setSelected(false);
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - Gerrit
+    private JPanel dialogPane;
+    private JButton okButton;
+    private JTabbedPane tabbedPane1;
+    private JPanel panel1;
+    private JRadioButton radioButton3;
+    private JRadioButton radioButton4;
+    private JRadioButton radioButton5;
+    private JPanel panel3;
+    private JScrollPane scrollPane1;
+    private JTable table1;
+
+    private void radioButton5ActionPerformed(ActionEvent e) {
+        radioButton3.setSelected(false);
+        radioButton4.setSelected(false);
     }
 
     private void initComponents() {
@@ -149,16 +224,11 @@ public class StartScreen extends JDialog {
         radioButton3 = new JRadioButton();
         radioButton4 = new JRadioButton();
         radioButton5 = new JRadioButton();
-        panel2 = new JPanel();
-        scrollPane2 = new JScrollPane();
-        list1 = new JList<>();
-        checkBox1 = new JCheckBox();
-        checkBox2 = new JCheckBox();
-        checkBox3 = new JCheckBox();
-        checkBox4 = new JCheckBox();
         panel3 = new JPanel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
+        slider1 = new JSlider();
+        label1 = new JLabel();
 
         //======== this ========
         setAlwaysOnTop(true);
@@ -172,18 +242,24 @@ public class StartScreen extends JDialog {
         {
             dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
             dialogPane.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(
-            0,0,0,0), "JF\u006frmDes\u0069gner \u0045valua\u0074ion",javax.swing.border.TitledBorder.CENTER,javax.swing.border.TitledBorder
-            .BOTTOM,new java.awt.Font("D\u0069alog",java.awt.Font.BOLD,12),java.awt.Color.
-            red),dialogPane. getBorder()));dialogPane. addPropertyChangeListener(new java.beans.PropertyChangeListener(){@Override public void propertyChange(java.
-            beans.PropertyChangeEvent e){if("\u0062order".equals(e.getPropertyName()))throw new RuntimeException();}});
+                    0, 0, 0, 0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder
+                    .BOTTOM, new java.awt.Font("D\u0069al\u006fg", java.awt.Font.BOLD, 12), java.awt.Color.
+                    red), dialogPane.getBorder()));
+            dialogPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+                @Override
+                public void propertyChange(java.
+                                                   beans.PropertyChangeEvent e) {
+                    if ("\u0062or\u0064er".equals(e.getPropertyName())) throw new RuntimeException();
+                }
+            });
             dialogPane.setLayout(null);
 
             //---- okButton ----
             okButton.setText("OK");
             okButton.addActionListener(e -> {
-			okButtonActionPerformed(e);
-			okButtonActionPerformed(e);
-		});
+                okButtonActionPerformed(e);
+                okButtonActionPerformed(e);
+            });
             dialogPane.add(okButton);
             okButton.setBounds(285, 230, 85, okButton.getPreferredSize().height);
 
@@ -195,13 +271,16 @@ public class StartScreen extends JDialog {
 
                     //---- radioButton3 ----
                     radioButton3.setText("Pick cadava berries");
+                    radioButton3.addActionListener(e -> radioButton3ActionPerformed(e));
 
                     //---- radioButton4 ----
                     radioButton4.setText("Pick redberries");
+                    radioButton4.addActionListener(e -> radioButton4ActionPerformed(e));
 
                     //---- radioButton5 ----
                     radioButton5.setText("Pick both");
                     radioButton5.setSelected(true);
+                    radioButton5.addActionListener(e -> radioButton5ActionPerformed(e));
 
                     GroupLayout panel1Layout = new GroupLayout(panel1);
                     panel1.setLayout(panel1Layout);
@@ -226,77 +305,6 @@ public class StartScreen extends JDialog {
                 }
                 tabbedPane1.addTab("Picker options", panel1);
 
-                //======== panel2 ========
-                {
-
-                    //======== scrollPane2 ========
-                    {
-
-                        //---- list1 ----
-                        list1.setModel(new AbstractListModel<String>() {
-                            String[] values = {
-                                "Method: Examine random objects",
-                                "Method: Say random words",
-                                "Method: Turn screen random",
-                                "Method: Sleep random"
-                            };
-                            @Override
-                            public int getSize() { return values.length; }
-                            @Override
-                            public String getElementAt(int i) { return values[i]; }
-                        });
-                        list1.setFixedCellHeight(25);
-                        scrollPane2.setViewportView(list1);
-                    }
-
-                    //---- checkBox1 ----
-                    checkBox1.setText("Enable");
-
-                    //---- checkBox2 ----
-                    checkBox2.setText("Enable");
-
-                    //---- checkBox3 ----
-                    checkBox3.setText("Enable");
-
-                    //---- checkBox4 ----
-                    checkBox4.setText("Enable");
-
-                    GroupLayout panel2Layout = new GroupLayout(panel2);
-                    panel2.setLayout(panel2Layout);
-                    panel2Layout.setHorizontalGroup(
-                        panel2Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(panel2Layout.createParallelGroup()
-                                    .addGroup(panel2Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(checkBox1))
-                                    .addGroup(panel2Layout.createSequentialGroup()
-                                        .addGroup(panel2Layout.createParallelGroup()
-                                            .addComponent(checkBox2)
-                                            .addComponent(checkBox3)
-                                            .addComponent(checkBox4))
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE))
-                    );
-                    panel2Layout.setVerticalGroup(
-                        panel2Layout.createParallelGroup()
-                            .addGroup(panel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(checkBox1)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(checkBox2)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(checkBox3)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(checkBox4)
-                                .addContainerGap(97, Short.MAX_VALUE))
-                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-                    );
-                }
-                tabbedPane1.addTab("Anti-ban options", panel2);
-
                 //======== panel3 ========
                 {
                     panel3.setLayout(new GridLayout(1, 1));
@@ -307,15 +315,27 @@ public class StartScreen extends JDialog {
                     }
                     panel3.add(scrollPane1);
                 }
-                tabbedPane1.addTab("About", panel3);
+                tabbedPane1.addTab("Anti-ban options", panel3);
             }
             dialogPane.add(tabbedPane1);
             tabbedPane1.setBounds(0, 0, 365, 225);
 
+            //---- slider1 ----
+            slider1.setMaximum(3600);
+            slider1.setMinimum(60);
+            slider1.addChangeListener(e -> slider1StateChanged(e));
+            dialogPane.add(slider1);
+            slider1.setBounds(5, 250, 270, 15);
+
+            //---- label1 ----
+            label1.setText("Execute anti-ban method every 60 seconds");
+            dialogPane.add(label1);
+            label1.setBounds(10, 230, 255, label1.getPreferredSize().height);
+
             {
                 // compute preferred size
                 Dimension preferredSize = new Dimension();
-                for(int i = 0; i < dialogPane.getComponentCount(); i++) {
+                for (int i = 0; i < dialogPane.getComponentCount(); i++) {
                     Rectangle bounds = dialogPane.getComponent(i).getBounds();
                     preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
                     preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
@@ -348,25 +368,5 @@ public class StartScreen extends JDialog {
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
-
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Gerrit
-    private JPanel dialogPane;
-    private JButton okButton;
-    private JTabbedPane tabbedPane1;
-    private JPanel panel1;
-    private JRadioButton radioButton3;
-    private JRadioButton radioButton4;
-    private JRadioButton radioButton5;
-    private JPanel panel2;
-    private JScrollPane scrollPane2;
-    private JList<String> list1;
-    private JCheckBox checkBox1;
-    private JCheckBox checkBox2;
-    private JCheckBox checkBox3;
-    private JCheckBox checkBox4;
-    private JPanel panel3;
-    private JScrollPane scrollPane1;
-    private JTable table1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

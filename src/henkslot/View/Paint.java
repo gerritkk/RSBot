@@ -1,13 +1,13 @@
-package henkslot;
+package henkslot.View;
 
+import henkslot.Model.AntiBan;
+import henkslot.Model.Util;
 import org.powerbot.script.PaintListener;
 import org.powerbot.script.Tile;
 import org.powerbot.script.rt4.ClientContext;
-import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.TileMatrix;
 
 import java.awt.*;
-import java.time.Duration;
 
 public class Paint implements PaintListener {
 
@@ -20,18 +20,18 @@ public class Paint implements PaintListener {
     @Override
     public void repaint(Graphics graphics) {
         Graphics2D g = (Graphics2D) graphics;
-        // draws the player
-        ctx.players.local().boundingModel().drawWireFrame(g);
         Tile tile123 = ctx.players.local().tile();
         TileMatrix matrix123 = tile123.matrix(ctx);
         g.setColor(Color.red);
         g.drawPolygon(matrix123.bounds());
 
-//        g.setFont(new Font("Courier New", Font.BOLD, 12));
-//        g.drawString("Berries collected: ", 0, 10);
-//        g.drawString("Time ran: " + (System.currentTimeMillis() / 1000) + " seconds", 0, 30);
+        g.setFont(new Font("Courier New", Font.BOLD, 18));
+        g.drawString("Berries collected: " + Util.berries_collected, 0, 30);
+        g.drawString("Runtime: " + Util.formatSeconds((int) ((System.currentTimeMillis() - Util.start_time) / 1000)), 0, 50);
+        g.drawString("Bot state: " + Util.current_state, 0, 70);
+        g.drawString("Anti-ban state: \n" + Util.latest_anti_ban, 0, 90);
 
-        //draws the area
+        //draws the area (might delete cuz it's too expensive)
         if (AntiBan.examine_area != null) {
 
             Polygon poly = AntiBan.examine_area.getPolygon();
