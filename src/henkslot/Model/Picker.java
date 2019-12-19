@@ -31,7 +31,7 @@ public class Picker extends PollingScript<CustomContext> {
 
     @Override
     public void start() {
-        task_list.addAll(Arrays.asList(new DepositBerryTask(ctx), new HopWorldTask(ctx), new PickBerryTask(ctx), new WaitTask(ctx), new WalkToBankTask(ctx), new WalkToBushTask(ctx)));
+        task_list.addAll(Arrays.asList(new DepositBerryTask(ctx), new HopWorldTask(ctx), new PickBerryTask(ctx), new WalkToBankTask(ctx), new WalkToBushTask(ctx)));
         log.info("started...");
         Util.inventory_space = ctx.inventory.select().id(Util.berry_ids).count();
         Util.inventory_space_temp = Util.inventory_space;
@@ -53,7 +53,7 @@ public class Picker extends PollingScript<CustomContext> {
                     int random_number = Random.nextInt(0, anti_ban_methods.size());
                     anti_ban_methods.get(random_number).Execute();
                 }
-            }, 5000, 20000);
+            }, 5000, Util.anti_ban_time * 1000);
         }
     }
 
@@ -69,6 +69,9 @@ public class Picker extends PollingScript<CustomContext> {
             log.info("3");
             Util.use_bushes = Util.bush_ids;
         }
+
+        // Initiate anti-ban time
+        Util.anti_ban_time = Util.sc.GetSliderValue();
 
         if (Util.sc.isUse_examine_random_objects()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {

@@ -8,8 +8,10 @@ import javafx.scene.control.SelectionModel;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Hashtable;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
@@ -171,6 +173,47 @@ public class StartScreen extends JDialog {
         // TODO: add custom component creation code here
     }
 
+    private JSlider slider1;
+    private JLabel label1;
+
+    private void slider1StateChanged(ChangeEvent e) {
+        JSlider source;
+        source = (JSlider) e.getSource();
+        label1.setText("Execute anti-ban method every " + source.getValue() + " seconds");
+    }
+
+    public int GetSliderValue() {
+        return slider1.getValue();
+    }
+
+    private void radioButton3ActionPerformed(ActionEvent e) {
+        radioButton4.setSelected(false);
+        radioButton5.setSelected(false);
+    }
+
+    private void radioButton4ActionPerformed(ActionEvent e) {
+        radioButton3.setSelected(false);
+        radioButton5.setSelected(false);
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - Gerrit
+    private JPanel dialogPane;
+    private JButton okButton;
+    private JTabbedPane tabbedPane1;
+    private JPanel panel1;
+    private JRadioButton radioButton3;
+    private JRadioButton radioButton4;
+    private JRadioButton radioButton5;
+    private JPanel panel3;
+    private JScrollPane scrollPane1;
+    private JTable table1;
+
+    private void radioButton5ActionPerformed(ActionEvent e) {
+        radioButton3.setSelected(false);
+        radioButton4.setSelected(false);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Gerrit
@@ -184,6 +227,8 @@ public class StartScreen extends JDialog {
         panel3 = new JPanel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
+        slider1 = new JSlider();
+        label1 = new JLabel();
 
         //======== this ========
         setAlwaysOnTop(true);
@@ -196,15 +241,15 @@ public class StartScreen extends JDialog {
         //======== dialogPane ========
         {
             dialogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
-            dialogPane.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.
-                    EmptyBorder(0, 0, 0, 0), "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax.swing.border.TitledBorder.CENTER, javax.swing
-                    .border.TitledBorder.BOTTOM, new java.awt.Font("D\u0069alog", java.awt.Font.BOLD, 12),
-                    java.awt.Color.red), dialogPane.getBorder()));
+            dialogPane.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(
+                    0, 0, 0, 0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder
+                    .BOTTOM, new java.awt.Font("D\u0069al\u006fg", java.awt.Font.BOLD, 12), java.awt.Color.
+                    red), dialogPane.getBorder()));
             dialogPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
                 @Override
-                public void propertyChange(java.beans.PropertyChangeEvent e) {
-                    if ("\u0062order".equals(e.getPropertyName()))
-                        throw new RuntimeException();
+                public void propertyChange(java.
+                                                   beans.PropertyChangeEvent e) {
+                    if ("\u0062or\u0064er".equals(e.getPropertyName())) throw new RuntimeException();
                 }
             });
             dialogPane.setLayout(null);
@@ -226,13 +271,16 @@ public class StartScreen extends JDialog {
 
                     //---- radioButton3 ----
                     radioButton3.setText("Pick cadava berries");
+                    radioButton3.addActionListener(e -> radioButton3ActionPerformed(e));
 
                     //---- radioButton4 ----
                     radioButton4.setText("Pick redberries");
+                    radioButton4.addActionListener(e -> radioButton4ActionPerformed(e));
 
                     //---- radioButton5 ----
                     radioButton5.setText("Pick both");
                     radioButton5.setSelected(true);
+                    radioButton5.addActionListener(e -> radioButton5ActionPerformed(e));
 
                     GroupLayout panel1Layout = new GroupLayout(panel1);
                     panel1.setLayout(panel1Layout);
@@ -272,10 +320,22 @@ public class StartScreen extends JDialog {
             dialogPane.add(tabbedPane1);
             tabbedPane1.setBounds(0, 0, 365, 225);
 
+            //---- slider1 ----
+            slider1.setMaximum(3600);
+            slider1.setMinimum(60);
+            slider1.addChangeListener(e -> slider1StateChanged(e));
+            dialogPane.add(slider1);
+            slider1.setBounds(5, 250, 270, 15);
+
+            //---- label1 ----
+            label1.setText("Execute anti-ban method every 60 seconds");
+            dialogPane.add(label1);
+            label1.setBounds(10, 230, 255, label1.getPreferredSize().height);
+
             {
                 // compute preferred size
                 Dimension preferredSize = new Dimension();
-                for(int i = 0; i < dialogPane.getComponentCount(); i++) {
+                for (int i = 0; i < dialogPane.getComponentCount(); i++) {
                     Rectangle bounds = dialogPane.getComponent(i).getBounds();
                     preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
                     preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
@@ -308,18 +368,5 @@ public class StartScreen extends JDialog {
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
-
-    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - Gerrit
-    private JPanel dialogPane;
-    private JButton okButton;
-    private JTabbedPane tabbedPane1;
-    private JPanel panel1;
-    private JRadioButton radioButton3;
-    private JRadioButton radioButton4;
-    private JRadioButton radioButton5;
-    private JPanel panel3;
-    private JScrollPane scrollPane1;
-    private JTable table1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

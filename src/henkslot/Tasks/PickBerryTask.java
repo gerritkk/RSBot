@@ -5,6 +5,7 @@ import henkslot.Model.Task;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.ClientContext;
+import org.powerbot.script.rt4.Game;
 import org.powerbot.script.rt4.GameObject;
 
 public class PickBerryTask extends Task<ClientContext> {
@@ -21,11 +22,20 @@ public class PickBerryTask extends Task<ClientContext> {
 
     @Override
     public void execute() {
+
+        if (ctx.game.tab() != Game.Tab.INVENTORY) {
+            ctx.game.tab(Game.Tab.INVENTORY, true);
+        }
+
         Util.current_state = "Picking berries...";
+
         // handles running
         CheckEnergyLevel();
 
-        for (GameObject berry_bush : ctx.objects.select().id(Util.use_bushes).within(Util.berry_area).nearest()) {
+        // find all the bushes within the area
+        ctx.objects.select().id(Util.use_bushes).within(Util.berry_area);
+
+        for (GameObject berry_bush : ctx.objects.id(Util.use_bushes).nearest()) {
             BerriesCollected();
             // if player is not walking or running
             if (!ctx.players.local().inMotion()) {
