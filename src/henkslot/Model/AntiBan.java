@@ -4,11 +4,12 @@ package henkslot.Model;
 //Humans are curious, bots are not. So...
 
 import org.powerbot.script.*;
+import org.powerbot.script.ClientAccessor;
 import org.powerbot.script.rt4.*;
 import org.powerbot.script.rt4.ClientContext;
 import java.time.LocalTime;
 
-public class AntiBan extends ClientContext implements AntiBanMethod {
+public class AntiBan extends ClientAccessor<CustomContext> implements AntiBanMethod {
 
     public Picker picker;
     public static Area examine_area;
@@ -16,12 +17,12 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
     public static int y;
     public static int z;
 
-    public AntiBan(ClientContext ctx, Picker picker) {
+    public AntiBan(CustomContext ctx, Picker picker) {
         super(ctx);
         this.picker = picker;
     }
 
-    public AntiBan(ClientContext ctx) {
+    public AntiBan(CustomContext ctx) {
         super(ctx);
     }
 
@@ -32,19 +33,19 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
     public void TurnScreenRandom() {
         examine_area = null;
         try {
-            GameObject random_object = objects.select().nearest().limit(1, 1).poll();
-            camera.turnTo(random_object);
+            GameObject random_object = ctx.objects.select().nearest().limit(1, 1).poll();
+            ctx.camera.turnTo(random_object);
             Condition.sleep(Random.nextInt(1500, 2000));
         } catch (IllegalArgumentException iae) {
             System.out.println(iae.toString());
         }
-        Util.latest_anti_ban = "Turned screen random";
+        ctx.utilities.latest_anti_ban = "Turned screen random";
     }
 
     public void ExamineRandomObjects() {
-        x = players.local().tile().x();
-        y = players.local().tile().y();
-        z = players.local().tile().floor();
+        x = ctx.players.local().tile().x();
+        y = ctx.players.local().tile().y();
+        z = ctx.players.local().tile().floor();
 
         // tile currently standing on
         Tile current_tile = new Tile(x, y, z);
@@ -56,23 +57,22 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         // create an area with these tiles
         // currently: 6x6 area
         examine_area = new Area(left_top_corner, right_bottom_corner);
-
+        Boolean examined = false;
         // loop through this area and look for every tile if there's an object standing on it
         for (Tile temp_tile : examine_area.tiles()) {
             GameObject temp_object;
             // if there's an object on this tile
-            if (!objects.select().at(temp_tile).isEmpty()) {
-                temp_object = objects.select().at(temp_tile).poll();
+            if (!ctx.objects.select().at(temp_tile).isEmpty()) {
+                temp_object = ctx.objects.select().at(temp_tile).poll();
                 // if this object is of the type interactive (object with examine option)
-                if (temp_object.type() == GameObject.Type.INTERACTIVE) {
+                if (temp_object.type() == GameObject.Type.INTERACTIVE && !examined) {
                     temp_object.hover();
-                    Condition.sleep(Random.nextInt(500, 1000));
                     temp_object.interact("Examine");
-                    Condition.sleep(Random.nextInt(1500, 2000));
+                    examined = true;
                 }
             }
         }
-        Util.latest_anti_ban = "Examined random objects";
+        ctx.utilities.latest_anti_ban = "Examined random objects";
     }
 
     public void SayRandomWords() {
@@ -86,9 +86,8 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
             }
             randomStrings = new String(word);
         }
-        input.sendln(randomStrings);
-        Condition.sleep(Random.nextInt(1500, 2000));
-        Util.latest_anti_ban = "Say random words";
+        ctx.input.sendln(randomStrings);
+        ctx.utilities.latest_anti_ban = "Say random words";
     }
 
     public void SleepRandom() {
@@ -116,30 +115,30 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
         int rand_second = Random.nextInt(Random.nextInt(1100, 1500), Random.nextInt(1500, 1900));
 
         int final_sleep_time = Random.nextInt(rand_first, rand_second);
-        Util.latest_anti_ban = "Random sleep";
+        ctx.utilities.latest_anti_ban = "Random sleep";
         Condition.sleep(final_sleep_time);
     }
 
     public void RunEnergyRandom() {
         // if the bank interface is open, don't try to click the run energy
-        if (!bank.opened()) {
+        if (!ctx.bank.opened()) {
             // can't run if there's no energy
-            if (movement.energyLevel() > 0) {
-                movement.running(true);
+            if (ctx.movement.energyLevel() > 0) {
+                ctx.movement.running(true);
             } else {
-                movement.running(false);
+                ctx.movement.running(false);
             }
         }
-        Util.latest_anti_ban = "Random run energy";
+        ctx.utilities.latest_anti_ban = "Random run energy";
     }
 
     public void SayRandomPlayerName() {
         // update the query cache with new data
-        players.select();
+        ctx.players.select();
         // store the nearest player into the variable p (excluding urself)
-        final Player p = players.select().within(25).select(new Filter<Player>() {
+        final Player p = ctx.players.select().within(25).select(new Filter<Player>() {
             public boolean accept(Player player) {
-                return !player.equals(players.local());
+                return !player.equals(ctx.players.local());
             }
         }).poll();
         // update with more starting sentences
@@ -151,18 +150,19 @@ public class AntiBan extends ClientContext implements AntiBanMethod {
 
         // if the query found a player
         if (p != null) {
-            input.sendln(random_start + p.name());
+            ctx.input.sendln(random_start + p.name());
             SleepRandom();
         }
-        Util.latest_anti_ban = "Say random player name";
+        ctx.utilities.latest_anti_ban = "Say random player name";
     }
 
     public void ZoomInOut() {
-        System.out.println("pitch" + camera.pitch());
-        camera.pitch(150);
-        Condition.sleep(2000);
-        camera.pitch(300);
-        System.out.println("pitch" + camera.pitch());
-        Util.latest_anti_ban = "zoom in out";
+        // will be implemented soon
+//        System.out.println("pitch" + ctx.camera.pitch());
+//        ctx.camera.pitch(150);
+//        Condition.sleep(2000);
+//        ctx.camera.pitch(300);
+//        System.out.println("pitch" + ctx.camera.pitch());
+        ctx.utilities.latest_anti_ban = "zoom in out";
     }
 }

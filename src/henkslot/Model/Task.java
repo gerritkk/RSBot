@@ -4,7 +4,7 @@ import henkslot.Model.Util;
 import org.powerbot.script.ClientAccessor;
 import org.powerbot.script.rt4.ClientContext;
 
-public abstract class Task<C extends ClientContext> extends ClientAccessor<C> {
+public abstract class Task<C extends CustomContext> extends ClientAccessor<C> {
 
     public Task(C ctx) {
         super(ctx);
@@ -15,7 +15,7 @@ public abstract class Task<C extends ClientContext> extends ClientAccessor<C> {
     public abstract void execute();
 
     public boolean BerryAreaHasBerries() {
-        return (Util.berry_area.contains(ctx.objects.select().id(Util.use_bushes).nearest().poll())) ? true : false;
+        return (ctx.utilities.berry_area.contains(ctx.objects.select().id(ctx.utilities.use_bushes).nearest().poll())) ? true : false;
     }
 
     public void CheckEnergyLevel() {
@@ -27,12 +27,12 @@ public abstract class Task<C extends ClientContext> extends ClientAccessor<C> {
     }
 
     public void BerriesCollected() {
-        Util.inventory_space = ctx.inventory.select().id(Util.berry_ids).count();
+        ctx.utilities.inventory_space = ctx.inventory.select().id(ctx.utilities.berry_ids).count();
 
         // If the temp inventory space set at the start of the script is different than current amount of berries in inv
-        if (Util.inventory_space_temp != Util.inventory_space) {
-            Util.berries_collected++;
-            Util.inventory_space_temp = Util.inventory_space;
+        if (ctx.utilities.inventory_space_temp != ctx.utilities.inventory_space) {
+            ctx.utilities.berries_collected++;
+            ctx.utilities.inventory_space_temp = ctx.utilities.inventory_space;
         }
     }
 }

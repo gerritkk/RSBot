@@ -33,11 +33,11 @@ public class Picker extends PollingScript<CustomContext> {
     public void start() {
         task_list.addAll(Arrays.asList(new DepositBerryTask(ctx), new HopWorldTask(ctx), new PickBerryTask(ctx), new WalkToBankTask(ctx), new WalkToBushTask(ctx)));
         log.info("started...");
-        Util.inventory_space = ctx.inventory.select().id(Util.berry_ids).count();
-        Util.inventory_space_temp = Util.inventory_space;
-        Util.start_time = System.currentTimeMillis();
-        Util.sc = new StartScreen();
-        Util.sc.setVisible(true);
+        ctx.utilities.inventory_space = ctx.inventory.select().id(ctx.utilities.berry_ids).count();
+        ctx.utilities.inventory_space_temp = ctx.utilities.inventory_space;
+        ctx.utilities.start_time = System.currentTimeMillis();
+        ctx.utilities.sc = new StartScreen();
+        ctx.utilities.sc.setVisible(true);
         // set user settings from the JFrame
         SetUserSettings();
         System.out.println("Er zijn " + anti_ban_methods.size() + " anti-ban methodes aanwezig...");
@@ -53,27 +53,27 @@ public class Picker extends PollingScript<CustomContext> {
                     int random_number = Random.nextInt(0, anti_ban_methods.size());
                     anti_ban_methods.get(random_number).Execute();
                 }
-            }, 5000, Util.anti_ban_time * 1000);
+            }, 5000, ctx.utilities.anti_ban_time * 1000);
         }
     }
 
     public void SetUserSettings() {
         // use user settings
-        if (Util.sc.isOnly_cadava_berries()) {
+        if (ctx.utilities.sc.isOnly_cadava_berries()) {
             log.info("1");
-            Util.use_bushes = Util.cadava_berry_bush;
-        } else if (Util.sc.isOnly_redberries()) {
+            ctx.utilities.use_bushes = ctx.utilities.cadava_berry_bush;
+        } else if (ctx.utilities.sc.isOnly_redberries()) {
             log.info("2");
-            Util.use_bushes = Util.redberry_bush;
+            ctx.utilities.use_bushes = ctx.utilities.redberry_bush;
         } else {
             log.info("3");
-            Util.use_bushes = Util.bush_ids;
+            ctx.utilities.use_bushes = ctx.utilities.bush_ids;
         }
 
         // Initiate anti-ban time
-        Util.anti_ban_time = Util.sc.GetSliderValue();
+        ctx.utilities.anti_ban_time = ctx.utilities.sc.GetSliderValue();
 
-        if (Util.sc.isUse_examine_random_objects()) {
+        if (ctx.utilities.sc.isUse_examine_random_objects()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
@@ -82,7 +82,7 @@ public class Picker extends PollingScript<CustomContext> {
             });
         }
 
-        if (Util.sc.isUse_sleep_random()) {
+        if (ctx.utilities.sc.isUse_sleep_random()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
@@ -91,7 +91,7 @@ public class Picker extends PollingScript<CustomContext> {
             });
         }
 
-        if (Util.sc.isUse_say_random_words()) {
+        if (ctx.utilities.sc.isUse_say_random_words()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
@@ -100,7 +100,7 @@ public class Picker extends PollingScript<CustomContext> {
             });
         }
 
-        if (Util.sc.isUse_turn_screen_random()) {
+        if (ctx.utilities.sc.isUse_turn_screen_random()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
@@ -109,7 +109,7 @@ public class Picker extends PollingScript<CustomContext> {
             });
         }
 
-        if (Util.sc.isUse_run_energy_random()) {
+        if (ctx.utilities.sc.isUse_run_energy_random()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
@@ -118,7 +118,7 @@ public class Picker extends PollingScript<CustomContext> {
             });
         }
 
-        if (Util.sc.isUse_greet_random_player()) {
+        if (ctx.utilities.sc.isUse_greet_random_player()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
@@ -127,7 +127,7 @@ public class Picker extends PollingScript<CustomContext> {
             });
         }
 
-        if (Util.sc.isUse_zoom_in_out()) {
+        if (ctx.utilities.sc.isUse_zoom_in_out()) {
             anti_ban_methods.add(new AntiBan(ctx, this) {
                 @Override
                 public void Execute() {
