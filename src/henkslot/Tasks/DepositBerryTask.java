@@ -1,36 +1,52 @@
 package henkslot.Tasks;
 
+import henkslot.Model.CustomContext;
 import henkslot.Model.Util;
 import henkslot.Model.Task;
 import org.powerbot.script.Condition;
 import org.powerbot.script.Random;
 import org.powerbot.script.rt4.ClientContext;
 
-public class DepositBerryTask extends Task<ClientContext> {
+import java.util.concurrent.Callable;
 
-    public DepositBerryTask(ClientContext ctx) {
+public class DepositBerryTask extends Task<CustomContext> {
+
+    public DepositBerryTask(CustomContext ctx) {
         super(ctx);
     }
 
     @Override
     public boolean activate() {
         // inventory full and in bank area
-        return !ctx.inventory.isEmpty() && Util.bank_area.contains(ctx.players.local());
+        return !ctx.inventory.isEmpty() && ctx.utilities.bank_area.contains(ctx.players.local());
     }
 
     @Override
     public void execute() {
-        Util.current_state = "Depositing berries...";
-        Util.bank_booth = ctx.objects.select().id(Util.bank_booth_id).within(Util.bank_area).nearest().limit(1, 1).poll();
-        Util.bank_booth.interact("Bank");
-        Condition.sleep(Random.nextInt(1500, 2000));
+        ctx.utilities.current_state = "Depositing berries...";
+        ctx.bank.open();
+
+        // wait until the bank is opened
+        Condition.wait(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ctx.bank.opened();
+            }
+        }, 100, 10);
         ctx.bank.depositInventory();
-        Condition.sleep(Random.nextInt(1000, 2000));
+
+        // wait until inventory is deposited
+        Condition.wait(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return ctx.inventory.select().isEmpty();
+            }
+        }, 100, 10);
         ctx.bank.close();
+
         if (ctx.inventory.select().count() == 0) {
-            Util.inventory_space_temp = 0;
-            Util.inventory_space = 0;
+            ctx.utilities.inventory_space_temp = 0;
+            ctx.utilities.inventory_space = 0;
         }
-        Condition.sleep(Random.nextInt(1000, 2000));
     }
 }

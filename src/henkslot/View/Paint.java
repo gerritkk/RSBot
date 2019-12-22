@@ -1,6 +1,7 @@
 package henkslot.View;
 
 import henkslot.Model.AntiBan;
+import henkslot.Model.CustomContext;
 import henkslot.Model.Util;
 import org.powerbot.script.PaintListener;
 import org.powerbot.script.Tile;
@@ -11,9 +12,9 @@ import java.awt.*;
 
 public class Paint implements PaintListener {
 
-    public ClientContext ctx;
+    public CustomContext ctx;
 
-    public Paint(ClientContext ctx) {
+    public Paint(CustomContext ctx) {
         this.ctx = ctx;
     }
 
@@ -26,10 +27,10 @@ public class Paint implements PaintListener {
         g.drawPolygon(matrix123.bounds());
 
         g.setFont(new Font("Courier New", Font.BOLD, 18));
-        g.drawString("Berries collected: " + Util.berries_collected, 0, 30);
-        g.drawString("Runtime: " + Util.formatSeconds((int) ((System.currentTimeMillis() - Util.start_time) / 1000)), 0, 50);
-        g.drawString("Bot state: " + Util.current_state, 0, 70);
-        g.drawString("Anti-ban state: \n" + Util.latest_anti_ban, 0, 90);
+        g.drawString("Berries collected: " + ctx.utilities.berries_collected, 0, 30);
+        g.drawString("Runtime: " + ctx.utilities.formatSeconds((int) ((System.currentTimeMillis() - ctx.utilities.start_time) / 1000)), 0, 50);
+        g.drawString("Bot state: " + ctx.utilities.current_state, 0, 70);
+        g.drawString("Anti-ban state: \n" + ctx.utilities.latest_anti_ban, 0, 90);
 
         //draws the area (might delete cuz it's too expensive)
         if (AntiBan.examine_area != null) {
