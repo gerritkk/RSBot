@@ -11,8 +11,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 @Script.Manifest(
-        name = "Picker", properties = "author=henkslot; topic=123456789; client=4;",
-        description = "picks precious things"
+        name = "Berry Picker", properties = "author=henkslot; topic=1353706; client=4;",
+        description = "Picks cadava- and/or redberries"
 )
 
 public class Picker extends PollingScript<CustomContext> {
